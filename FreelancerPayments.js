@@ -82,6 +82,19 @@ const FreelancerPayments = () => {
           <p>Balance: ${wallet.toFixed(2)}</p>
         </section>
 
+        <section className="filters">
+          <input type="text" placeholder="Search by freelancer or job title" />
+          <select>
+            <option>All</option>
+            <option>Paid</option>
+            <option>Pending</option>
+            <option>Overdue</option>
+          </select>
+          <input type="date" />
+          <input type="date" />
+          <button>Export CSV</button>
+        </section>
+
         <table className="payments-table">
           <thead>
             <tr>
