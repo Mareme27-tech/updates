@@ -71,25 +71,27 @@ const ClientPayments = () => {
   };
 
   const handlePay = (payment) => {
-    if (wallet < payment.amount) {
-      alert("Insufficient funds.");
-      return;
-    }
+  if (wallet < payment.amount) {
+    alert("Insufficient funds.");
+    return;
+  }
 
-    const newWallet = wallet - payment.amount;
-    const freelancerWallet = parseFloat(localStorage.getItem("freelancerWallet") || "0") + payment.amount;
+  const newWallet = wallet - parseFloat(payment.amount);
+  const freelancerWallet = parseFloat(localStorage.getItem("freelancerWallet") || "0");
+  const updatedFreelancerWallet = freelancerWallet + parseFloat(payment.amount);
 
-    const paidMilestones = JSON.parse(localStorage.getItem("paidMilestones") || "{}");
-    paidMilestones[payment.id] = true;
-    localStorage.setItem("paidMilestones", JSON.stringify(paidMilestones));
-    localStorage.setItem("clientWallet", newWallet.toString());
-    localStorage.setItem("freelancerWallet", freelancerWallet.toString());
+  const paidMilestones = JSON.parse(localStorage.getItem("paidMilestones") || "{}");
+  paidMilestones[payment.id] = true;
+  localStorage.setItem("paidMilestones", JSON.stringify(paidMilestones));
+  localStorage.setItem("clientWallet", newWallet.toString());
+  localStorage.setItem("freelancerWallet", updatedFreelancerWallet.toString());
 
-    setWallet(newWallet);
-    setPayments(prev =>
-      prev.map(p => p.id === payment.id ? { ...p, status: 'Paid' } : p)
-    );
-  };
+  setWallet(newWallet);
+  setPayments(prev =>
+    prev.map(p => p.id === payment.id ? { ...p, status: 'Paid' } : p)
+  );
+};
+
 
   return (
     <main className="client-payments-main">
@@ -118,6 +120,18 @@ const ClientPayments = () => {
         <section className="wallet-section">
           <h3>Client Wallet</h3>
           <p>Balance: ${wallet.toFixed(2)}</p>
+        </section>
+        <section className="filters">
+          <input type="text" placeholder="Search by freelancer or job title" />
+          <select>
+            <option>All</option>
+            <option>Paid</option>
+            <option>Pending</option>
+            <option>Overdue</option>
+          </select>
+          <input type="date" />
+          <input type="date" />
+          <button>Export CSV</button>
         </section>
 
         <table className="payments-table">
